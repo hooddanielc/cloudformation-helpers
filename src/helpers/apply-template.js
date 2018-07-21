@@ -43,7 +43,7 @@ const is_obj_equal = (a, b) => {
   return true;
 }
 
-module.exports = async (file_path, parameters = {}, name = get_stack_name_from_path(file_path)) => {
+module.exports = async (file_path, options = {}, name = get_stack_name_from_path(file_path)) => {
   if (!fs.existsSync(file_path)) return Promise.reject(new Error(`${file_path} does not exist`));
   const list = await list_stacks();
   const stack_name_map = {}
@@ -61,7 +61,7 @@ module.exports = async (file_path, parameters = {}, name = get_stack_name_from_p
       return update_stack([], {
         stackName: name,
         templateBody: fs.readFileSync(file_path, 'utf8'),
-        parameters
+        ...options
       });
       console.log('template updated');
     } else {
@@ -73,7 +73,7 @@ module.exports = async (file_path, parameters = {}, name = get_stack_name_from_p
     const created = await create_stack([], {
       stackName: name,
       templateBody: fs.readFileSync(file_path, 'utf8'),
-      parameters
+      ...options
     });
   }
   return 'ok';
